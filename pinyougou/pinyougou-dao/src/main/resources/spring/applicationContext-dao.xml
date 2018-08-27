@@ -30,7 +30,20 @@ http://www.springframework.org/schema/context/spring-context.xsd">
         <property name="typeAliasesPackage" value="com.pinyougou.pojo"/>
     </bean>
     <!--  扫描 mapper -->
+<!--
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.pinyougou.mapper"/>
     </bean>
+-->
+<!--    在运用了通用Mapper的时候需要把原来的mapper扫描配置修改为如下：-->
+    <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
+<!--        指定业务mapper（我们自己写的**Mapper）所在的包路径-->
+        <property name="basePackage" value="com.pinyougou.mapper"/>
+        <property name="properties">
+            <value>
+                mappers=tk.mybatis.mapper.common.Mapper
+            </value>
+        </property>
+    </bean>
+
 </beans>

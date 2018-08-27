@@ -17,7 +17,7 @@ public class BrandController {
     /**
      * 从注册中心获取该对象；在配置文件中已经指定了注册中心
      */
-    @Reference
+    @Reference(timeout = 10000)
     private BrandService brandService;
 
     /**
@@ -29,5 +29,17 @@ public class BrandController {
     //@ResponseBody
     public List<TbBrand> findAll(){
         return brandService.queryAll();
+    }
+
+    /**
+     * 根据分页信息分页查询品牌数据
+     * @param page 页号
+     * @param rows 页大小
+     * @return 品牌列表
+     */
+    @GetMapping("/testPage")
+    public List<TbBrand> testPage(@RequestParam(value="page", defaultValue = "1")Integer page,
+                                  @RequestParam(value="rows", defaultValue = "5")Integer rows){
+        return brandService.testPage(page, rows);
     }
 }
