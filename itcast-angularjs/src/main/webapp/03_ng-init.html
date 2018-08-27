@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angularJS测试</title>
+    <script src="js/angular.min.js"></script>
+
+</head>
+<body ng-app ng-init="name='传智播客'">
+<!--双向绑定的是表单项；一般在form标签里面，然后可以点击提交按钮后在后台可以接收的那些标签；如：input/button/textarea-->
+请输入你的名字：<input ng-model="name"/><br/>
+
+你输入的名字是：{{name}}
+
+</body>
+</html>

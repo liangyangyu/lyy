@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angularJS测试</title>
+    <script src="js/angular.min.js"></script>
+    <script type="text/javascript">
+
+        //创建定义模块
+        //参数1：指定模块在html标签中的名称
+        //参数2：是否要加载其它的模块；如果不需要加载也得写[]；如果不写则表示获取
+        var app = angular.module("app", []);
+
+        //在模块中注册处理器；参数1：处理器名称要与标签中名称一致；参数2：处理器的函数体
+        app.controller("myController", function ($scope) {
+
+            $scope.list = [1,2,3,4,5];
+
+            $scope.persons = [
+                {"id":111,"name":"传智播客1", "gender":"男"},
+                {"id":112,"name":"传智播客2", "gender":"女"},
+                {"id":113,"name":"传智播客3", "gender":"男"}
+            ];
+        });
+
+    </script>
+
+</head>
+<body ng-app="app" ng-controller="myController" >
+遍历：<br>
+<!--num为循环变量，关键字为in 后面的为遍历的集合-->
+<div ng-repeat="num in list">
+    {{num}}
+    <br/>
+</div>
+<br/>
+
+<table>
+    <tr>
+    <td>id</td>
+    <td>姓名</td>
+    <td>性别</td>
+    </tr>
+    <tbody>
+    <tr ng-repeat="p in persons">
+        <td>{{p.id}}</td>
+        <td>{{p.name}}</td>
+        <td>{{p.gender}}</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

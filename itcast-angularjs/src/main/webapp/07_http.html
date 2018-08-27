@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angularJS测试</title>
+    <script src="js/angular.min.js"></script>
+    <script type="text/javascript">
+
+        //创建定义模块
+        //参数1：指定模块在html标签中的名称
+        //参数2：是否要加载其它的模块；如果不需要加载也得写[]；如果不写则表示获取
+        var app = angular.module("app", []);
+
+        //在模块中注册处理器；参数1：处理器名称要与标签中名称一致；参数2：处理器的函数体
+        app.controller("myController", function ($scope, $http) {
+
+            //$http是angularJS内置的网络服务对象
+            $http.get("persons.json").success(function (response) {
+                //当操作成功后执行
+                $scope.persons = response;
+            }).error(function () {
+                //如果请求地址错误、网络不通、返回数据格式有问题
+                alert("获取数据失败");
+            });
+
+        });
+
+    </script>
+
+</head>
+<body ng-app="app" ng-controller="myController" >
+
+
+<table>
+    <tr>
+    <td>id</td>
+    <td>姓名</td>
+    <td>性别</td>
+    </tr>
+    <tbody>
+    <tr ng-repeat="p in persons">
+        <td>{{p.id}}</td>
+        <td>{{p.name}}</td>
+        <td>{{p.gender}}</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

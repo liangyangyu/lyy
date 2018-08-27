@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angularJS测试</title>
+    <script src="js/angular.min.js"></script>
+    <script type="text/javascript">
+
+        //创建定义模块
+        //参数1：指定模块在html标签中的名称
+        //参数2：是否要加载其它的模块；如果不需要加载也得写[]；如果不写则表示获取
+        var app = angular.module("app", []);
+
+        //在模块中注册处理器；参数1：处理器名称要与标签中名称一致；参数2：处理器的函数体
+        app.controller("myController", function ($scope) {
+
+            //在标签里面如果使用了函数；则该函数必须是上下文里面定义的
+            $scope.add = function () {
+                return parseInt($scope.x) + parseInt($scope.y);
+            };
+        });
+
+    </script>
+
+</head>
+<body ng-app="app" ng-controller="myController" >
+<!--双向绑定的是表单项；一般在form标签里面，然后可以点击提交按钮后在后台可以接收的那些标签；如：input/button/textarea-->
+x：<input ng-model="x"/><br/>
+y：<input ng-model="y"/><br/>
+
+x+y={{add()}}
+
+</body>
+</html>
