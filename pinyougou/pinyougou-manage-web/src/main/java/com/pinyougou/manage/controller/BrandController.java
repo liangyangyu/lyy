@@ -120,4 +120,18 @@ public class BrandController {
         }
         return Result.fail("删除品牌失败");
     }
+
+    /**
+     * 根据条件分页查询
+     * @param brand 查询条件对象
+     * @param page 页号
+     * @param rows 页大小
+     * @return 分页结果
+     */
+    @PostMapping("/search")
+    public PageResult search(@RequestBody TbBrand brand,
+                             @RequestParam(value="page", defaultValue = "1")Integer page,
+                             @RequestParam(value="rows", defaultValue = "5")Integer rows){
+        return brandService.search(brand, page, rows);
+    }
 }

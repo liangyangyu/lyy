@@ -45,7 +45,8 @@
             };
 
             $scope.reloadList = function () {
-                $scope.findPage($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
+                //$scope.findPage($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
+                $scope.search($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
 
             };
 
@@ -132,6 +133,23 @@
                 }
 
             };
+
+            //初始化查询对象;如果不初始化在后台则不认为它是一个json对象转换的时候则报错
+            $scope.searchEntity = {};
+
+            //根据条件分页查询数据
+            $scope.search = function (page, rows) {
+
+                //post的参数1：是一个地址；在地址中携带的参数在后台的任何映射都可以接收到
+                //post的参数2：提交的表单项；只能使用postMapping接收到
+                $http.post("../brand/search.do?page=" + page + "&rows=" + rows, $scope.searchEntity).success(function (response) {
+                    //设置列表
+                    $scope.list = response.rows;
+
+                    //更新总记录数
+                    $scope.paginationConf.totalItems = response.total;
+                });
+            };
         });
     </script>
 
@@ -139,7 +157,7 @@
 <body ng-app="pinyougou" ng-controller="brandController" ng-init="" class="hold-transition skin-red sidebar-mini">
   <!-- .box-body -->
                     <div class="box-header with-border">
-                        <h3 class="box-title">品牌管理</h3>{{selectedIds}}
+                        <h3 class="box-title">品牌管理</h3>
                     </div>
 
                     <div class="box-body">
@@ -159,7 +177,9 @@
                             </div>
                             <div class="box-tools pull-right">
                                 <div class="has-feedback">
-							        品牌名称：<input> 品牌首字母：<input>  <button class="btn btn-default">查询</button>                                 
+							        品牌名称：<input ng-model="searchEntity.name">
+                                    品牌首字母：<input ng-model="searchEntity.firstChar">
+                                    <button ng-click="reloadList()" class="btn btn-default">查询</button>
                                 </div>
                             </div>
                             <!--工具栏/-->
