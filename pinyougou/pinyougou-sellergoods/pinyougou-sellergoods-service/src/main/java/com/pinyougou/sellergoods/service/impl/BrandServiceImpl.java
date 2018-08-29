@@ -24,6 +24,7 @@ public class BrandServiceImpl extends BaseServiceImpl<TbBrand> implements BrandS
     }
 
     @Override
+    @Deprecated
     public List<TbBrand> testPage(Integer page, Integer rows) {
         //设置分页;  limit offset,rows
         PageHelper.startPage(page, rows);

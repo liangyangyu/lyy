@@ -15,5 +15,6 @@ public interface BrandService extends BaseService<TbBrand> {
      * @param rows 页大小
      * @return 品牌列表
      */
+    @Deprecated
     List<TbBrand> testPage(Integer page, Integer rows);
 }
