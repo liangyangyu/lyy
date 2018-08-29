@@ -90,6 +90,48 @@
                 });
 
             };
+
+            //选择了的id集合
+            $scope.selectedIds = [];
+
+
+            //点击复选框的事件
+            $scope.updateSelection = function ($event, id) {
+                if($event.target.checked){
+                    //如果选中则需要将id加入到数组
+                    $scope.selectedIds.push(id);
+                } else {
+                    //如果没有选中则从数组中移除该id
+                    //找出id在数组里面的下标
+                    var index = $scope.selectedIds.indexOf(id);
+                    //从一个数组中删除；参数1：删除的元素的索引号，参数2：本次要删除的个数
+                    $scope.selectedIds.splice(index, 1);
+                }
+            };
+
+            //删除
+            $scope.delete = function () {
+                if($scope.selectedIds.length < 1){
+                    alert("请先选择要删除的记录");
+                    return;//不再执行后面的代码
+                }
+                //confirm 如果点击了弹出的对话框中的 确定则返回true，否则返回false
+                if(confirm("确定要删除选择了的那些记录吗？")){
+                    $http.get("../brand/delete.do?ids=" + $scope.selectedIds).success(function (response) {
+                        if(response.success){
+                            //刷新列表
+                            $scope.reloadList();
+                            //清空当时选择的id
+                            $scope.selectedIds = [];
+                        } else {
+                            alert(response.message);
+                        }
+                    }).error(function () {
+                        alert("删除失败！");
+                    });
+                }
+
+            };
         });
     </script>
 
@@ -97,7 +139,7 @@
 <body ng-app="pinyougou" ng-controller="brandController" ng-init="" class="hold-transition skin-red sidebar-mini">
   <!-- .box-body -->
                     <div class="box-header with-border">
-                        <h3 class="box-title">品牌管理</h3>
+                        <h3 class="box-title">品牌管理</h3>{{selectedIds}}
                     </div>
 
                     <div class="box-body">
@@ -110,7 +152,7 @@
                                 <div class="form-group form-inline">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-default" ng-click="entity={}" title="新建" data-toggle="modal" data-target="#editModal" ><i class="fa fa-file-o"></i> 新建</button>
-                                        <button type="button" class="btn btn-default" title="删除" ><i class="fa fa-trash-o"></i> 删除</button>           
+                                        <button type="button" class="btn btn-default" ng-click="delete()" title="删除" ><i class="fa fa-trash-o"></i> 删除</button>
                                         <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
                                     </div>
                                 </div>
@@ -137,7 +179,7 @@
 			                      </thead>
 			                      <tbody>
 			                          <tr ng-repeat="entity in list">
-			                              <td><input  type="checkbox" ></td>			                              
+			                              <td><input ng-click="updateSelection($event, entity.id)" type="checkbox" ></td>
 				                          <td>{{entity.id}}</td>
 									      <td>{{entity.name}}</td>
 		                                  <td>{{entity.firstChar}}</td>
