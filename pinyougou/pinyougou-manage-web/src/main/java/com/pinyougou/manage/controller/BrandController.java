@@ -75,4 +75,34 @@ public class BrandController {
         }
         return Result.fail("新增品牌失败");
     }
+
+    /**
+     * 根据id查询品牌
+     * 在方法中的请求参数名称要与请求路径携带的参数名称一致；如果想不一致的话可以使用@RequestParam()进行修改
+     * @param id 品牌id
+     * @return 品牌
+     */
+    @GetMapping("/findOne")
+    public TbBrand findOne(Long id){
+        return brandService.findOne(id);
+    }
+
+
+    /**
+     * 更新品牌
+     * @param brand 品牌
+     * @return 操作结果
+     */
+    @PostMapping("/update")
+    public Result update(@RequestBody TbBrand brand){
+        try {
+            brandService.update(brand);
+
+            return Result.ok("更新品牌成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result.fail("更新品牌失败");
+    }
+
 }

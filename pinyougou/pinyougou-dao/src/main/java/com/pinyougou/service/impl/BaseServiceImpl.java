@@ -20,7 +20,7 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
     private Mapper<T> mapper;
 
     @Override
-    public T findById(Serializable id) {
+    public T findOne(Serializable id) {
         return mapper.selectByPrimaryKey(id);
     }
 

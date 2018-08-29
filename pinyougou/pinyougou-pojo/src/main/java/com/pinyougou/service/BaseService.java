@@ -8,7 +8,7 @@ import java.util.List;
 public interface BaseService<T> {
 
     //根据主键查询；业界中如果使用主键类型的时候更多使用Serializable而不用Object
-    T findById(Serializable id);
+    T findOne(Serializable id);
 
     //查询全部
     List<T> findAll();
