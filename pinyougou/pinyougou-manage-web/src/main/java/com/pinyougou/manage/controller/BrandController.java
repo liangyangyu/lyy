@@ -8,6 +8,7 @@ import com.pinyougou.vo.Result;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/brand")
 //@Controller
@@ -131,5 +132,15 @@ public class BrandController {
                              @RequestParam(value="page", defaultValue = "1")Integer page,
                              @RequestParam(value="rows", defaultValue = "5")Integer rows){
         return brandService.search(brand, page, rows);
+    }
+
+    /**
+     * 查询数据库中的所有品牌；并返回一个集合，集合中的数据结构如下：
+     *
+     * @return [{id:'1',text:'联想'},{id:'2',text:'华为'}]
+     */
+    @GetMapping("/selectOptionList")
+    public List<Map<String, Object>> selectOptionList(){
+        return brandService.selectOptionList();
     }
 }

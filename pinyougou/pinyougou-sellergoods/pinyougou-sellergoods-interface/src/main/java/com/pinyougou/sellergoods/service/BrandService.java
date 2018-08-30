@@ -5,6 +5,7 @@ import com.pinyougou.service.BaseService;
 import com.pinyougou.vo.PageResult;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BrandService extends BaseService<TbBrand> {
     //查询品牌
@@ -27,4 +28,11 @@ public interface BrandService extends BaseService<TbBrand> {
      * @return 分页结果
      */
     PageResult search(TbBrand brand, Integer page, Integer rows);
+
+    /**
+     * 查询数据库中的所有品牌；并返回一个集合，集合中的数据结构如下：
+     *
+     * @return [{id:'1',text:'联想'},{id:'2',text:'华为'}]
+     */
+    List<Map<String, Object>> selectOptionList();
 }
