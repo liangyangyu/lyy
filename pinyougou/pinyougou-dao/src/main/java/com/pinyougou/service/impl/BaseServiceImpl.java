@@ -35,7 +35,7 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
     }
 
     @Override
-    public PageResult findByPage(Integer page, Integer pageSize) {
+    public PageResult findPage(Integer page, Integer pageSize) {
         //设置分页
         PageHelper.startPage(page, pageSize);
 
@@ -48,7 +48,7 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
     }
 
     @Override
-    public PageResult findByPage(Integer page, Integer pageSize, T t) {
+    public PageResult findPage(Integer page, Integer pageSize, T t) {
         //设置分页
         PageHelper.startPage(page, pageSize);
 

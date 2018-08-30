@@ -45,7 +45,7 @@ public class BrandServiceImpl extends BaseServiceImpl<TbBrand> implements BrandS
         //创建一个查询对象
         Example example = new Example(TbBrand.class);
 
-        //创建一个查询条件对象
+        //创建一个查询条件对象；相当于拼接where子句
         Example.Criteria criteria = example.createCriteria();
 
         //根据首字母查询
@@ -53,7 +53,7 @@ public class BrandServiceImpl extends BaseServiceImpl<TbBrand> implements BrandS
             criteria.andEqualTo("firstChar", brand.getFirstChar());
         }
 
-        //根据品牌名称模糊查询
+        //根据品牌名称模糊查询 name like '%xxx%'
         if(!StringUtils.isEmpty(brand.getName())){
             criteria.andLike("name", "%" + brand.getName() + "%");
         }

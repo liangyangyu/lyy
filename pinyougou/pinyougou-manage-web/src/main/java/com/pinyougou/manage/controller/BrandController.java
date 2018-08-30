@@ -5,8 +5,6 @@ import com.pinyougou.pojo.TbBrand;
 import com.pinyougou.sellergoods.service.BrandService;
 import com.pinyougou.vo.PageResult;
 import com.pinyougou.vo.Result;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,7 +42,7 @@ public class BrandController {
     public List<TbBrand> testPage(@RequestParam(value="page", defaultValue = "1")Integer page,
                                   @RequestParam(value="rows", defaultValue = "5")Integer rows){
         //return brandService.testPage(page, rows);
-        return (List<TbBrand>) brandService.findByPage(page, rows).getRows();
+        return (List<TbBrand>) brandService.findPage(page, rows).getRows();
     }
 
     /**
@@ -56,7 +54,7 @@ public class BrandController {
     @GetMapping("/findPage")
     public PageResult findPage(@RequestParam(value="page", defaultValue = "1")Integer page,
                                @RequestParam(value="rows", defaultValue = "5")Integer rows){
-        return brandService.findByPage(page, rows);
+        return brandService.findPage(page, rows);
     }
 
     /**
