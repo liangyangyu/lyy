@@ -36,5 +36,28 @@ app.controller("baseController", function ($scope) {
         }
     };
 
+    /**
+     * 将一个json集合字符串里面的某个属性的值全部串起来并返回
+     * @param jsonStrList json集合字符串；如：[{"text":"内存大小"},{"text":"颜色"}]
+     * @param key 每个对象里面的属性名称；如：text
+     * @returns 中文使用逗号分隔；如：内存大小,颜色
+     */
+    $scope.jsonToString = function (jsonStrList, key) {
+        var str = "";
+        //将json字符串转换为一个json对象
+        var jsonArray = JSON.parse(jsonStrList);
+        for (var i = 0; i < jsonArray.length; i++) {
+            var obj = jsonArray[i];
+
+            if(str.length > 0){
+                str += "," + obj[key]
+            } else {
+                str = obj[key];
+            }
+        }
+
+        return str;
+    }
+
 
 });
