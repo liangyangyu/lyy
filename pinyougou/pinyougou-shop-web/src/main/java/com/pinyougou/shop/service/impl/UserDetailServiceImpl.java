@@ -1,5 +1,9 @@
 package com.pinyougou.shop.service.impl;
 
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.pinyougou.pojo.TbSeller;
+import com.pinyougou.sellergoods.service.SellerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -12,6 +16,8 @@ import java.util.List;
 
 public class UserDetailServiceImpl implements UserDetailsService {
 
+    private SellerService sellerService;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -19,6 +25,16 @@ public class UserDetailServiceImpl implements UserDetailsService {
         //可以根据用户到数据库中查询该用户对于的角色权限
         authorities.add(new SimpleGrantedAuthority("ROLE_SELLER"));
 
-        return new User(username, "123456", authorities);
+        TbSeller seller = sellerService.findOne(username);
+
+        if(seller != null && "1".equals(seller.getStatus())){//商家存在并且审核通过
+            return new User(username, seller.getPassword(), authorities);
+        }
+
+        return null;
+    }
+
+    public void setSellerService(SellerService sellerService) {
+        this.sellerService = sellerService;
     }
 }
