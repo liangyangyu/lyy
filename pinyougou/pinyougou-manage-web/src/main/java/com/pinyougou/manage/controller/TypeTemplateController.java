@@ -7,6 +7,7 @@ import com.pinyougou.vo.PageResult;
 import com.pinyougou.vo.Result;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RequestMapping("/typeTemplate")
