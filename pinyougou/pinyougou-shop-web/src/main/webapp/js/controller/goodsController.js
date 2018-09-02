@@ -32,6 +32,8 @@ app.controller("goodsController", function ($scope, $controller, $location, good
         object.success(function (response) {
             if(response.success){
                 alert(response.message);
+                //清空富文本编辑器的内容
+                editor.html("");
                 //location.href = "goods.html";
             } else {
                 alert(response.message);
