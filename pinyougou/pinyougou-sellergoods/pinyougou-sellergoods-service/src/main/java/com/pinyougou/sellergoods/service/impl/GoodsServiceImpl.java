@@ -45,6 +45,9 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
 
         Example example = new Example(TbGoods.class);
         Example.Criteria criteria = example.createCriteria();
+        //排除已删除的数据
+        criteria.andNotEqualTo("isDelete", "1");
+
         if(!StringUtils.isEmpty(goods.getSellerId())){
             //实体类中对应的属性名称，查询的值
             criteria.andEqualTo("sellerId", goods.getSellerId());
@@ -146,6 +149,18 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
             //根据条件选择性更新；要更新的数值；更新条件
             itemMapper.updateByExampleSelective(item, itemExample);
         }
+    }
+
+    @Override
+    public void deleteGoodsByIds(Long[] ids) {
+        TbGoods goods = new TbGoods();
+        goods.setIsDelete("1");
+
+        Example example = new Example(TbGoods.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andIn("id", Arrays.asList(ids));
+
+        goodsMapper.updateByExampleSelective(goods, example);
     }
 
     /**
