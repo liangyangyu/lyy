@@ -133,6 +133,19 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
 
         //goods表示要更新的数值; example更新的条件
         goodsMapper.updateByExampleSelective(goods, example);
+
+        if ("2".equals(status)) {
+            TbItem item = new TbItem();
+            item.setStatus("1");
+
+            Example itemExample = new Example(TbItem.class);
+            Example.Criteria criteria1 = itemExample.createCriteria();
+            // update tb_item set status='1' where goods_id in(1,3,34)
+            criteria1.andIn("goodsId", Arrays.asList(ids));
+
+            //根据条件选择性更新；要更新的数值；更新条件
+            itemMapper.updateByExampleSelective(item, itemExample);
+        }
     }
 
     /**
