@@ -33,8 +33,7 @@ app.controller("goodsController", function ($scope, $controller, $location, good
             if(response.success){
                 alert(response.message);
                 //清空富文本编辑器的内容
-                editor.html("");
-                //location.href = "goods.html";
+                location.href = "goods.html";
             } else {
                 alert(response.message);
             }
@@ -56,7 +55,7 @@ app.controller("goodsController", function ($scope, $controller, $location, good
             //向富文本编辑器设置商品内容
             editor.html($scope.entity.goodsDesc.introduction);
 
-            //转换商品图片列表
+            //转换商品图片列表；将返回的某个对象中的某个属性的值为json字符串的转换为json对象
             $scope.entity.goodsDesc.itemImages = JSON.parse($scope.entity.goodsDesc.itemImages);
             //转换商品扩展属性
             $scope.entity.goodsDesc.customAttributeItems = JSON.parse($scope.entity.goodsDesc.customAttributeItems);
