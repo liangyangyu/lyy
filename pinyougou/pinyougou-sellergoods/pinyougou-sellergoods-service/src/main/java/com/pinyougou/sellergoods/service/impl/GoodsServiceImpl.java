@@ -80,6 +80,48 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
 
     }
 
+    @Override
+    public Goods findGoodsById(Long id) {
+        Goods goods = new Goods();
+
+        //1、根据商品id查询商品基本信息
+        TbGoods tbGoods = findOne(id);
+        goods.setGoods(tbGoods);
+
+        //2、根据商品id查询商品描述信息
+        TbGoodsDesc tbGoodsDesc = goodsDescMapper.selectByPrimaryKey(id);
+        goods.setGoodsDesc(tbGoodsDesc);
+
+        //3、根据商品id查询商品sku列表
+        TbItem param = new TbItem();
+        param.setGoodsId(id);
+
+        //根据条件查询；查询条件（也就是该方法对应处理的对象）
+        List<TbItem> itemList = itemMapper.select(param);
+
+        goods.setItemList(itemList);
+
+        return goods;
+    }
+
+    @Override
+    public void updateGoods(Goods goods) {
+        //1、更新商品基本信息
+        update(goods.getGoods());
+
+        //2、更新商品描述信息；根据主键选择性更新
+        goodsDescMapper.updateByPrimaryKeySelective(goods.getGoodsDesc());
+
+        //3、删除商品id对应的原有的sku商品
+        TbItem param = new TbItem();
+        param.setGoodsId(goods.getGoods().getId());
+        //根据条件删除数据 delete from tb_item where goods_id=xxxx
+        itemMapper.delete(param);
+
+        //4、将最新的sku商品保存到数据库中
+        saveItemList(goods);
+    }
+
     /**
      * 保存sku动态数据
      * @param goods 商品

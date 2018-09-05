@@ -249,8 +249,9 @@ app.controller("goodsController", function ($scope, $controller, $location, good
         });
     };
 
-    //判断规格选项是否已经存在选择的里面
+    //判断规格选项是否已经存在选择的里面；规格名称（机身内存），选项名称（16G）
     $scope.checkAttributeValue = function (specName, optionName) {
+        //在数据库中已经选择了的那些规格及其对应的选项
         var items = $scope.entity.goodsDesc.specificationItems;
         var spec = $scope.findObjectByKeyAndValue(items, "attributeName", specName);
         if(spec != null){
