@@ -12,6 +12,7 @@ import com.pinyougou.service.impl.BaseServiceImpl;
 import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
@@ -66,10 +67,13 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         return new PageResult(pageInfo.getTotal(), pageInfo.getList());
     }
 
+    @Transactional
     @Override
     public void addGoods(Goods goods) {
         //1、保存基本信息；在mybatis中如果在保存成功后主键可以回填到保存时候的那个对象中
         add(goods.getGoods());
+
+        //int i = 1/0;
 
         //2、保存描述信息
         goods.getGoodsDesc().setGoodsId(goods.getGoods().getId());
@@ -104,6 +108,7 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         return goods;
     }
 
+    @Transactional
     @Override
     public void updateGoods(Goods goods) {
         //1、更新商品基本信息
@@ -122,6 +127,7 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         saveItemList(goods);
     }
 
+    @Transactional
     @Override
     public void updateStatus(Long[] ids, String status) {
 
