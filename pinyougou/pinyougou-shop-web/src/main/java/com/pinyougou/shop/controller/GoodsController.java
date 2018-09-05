@@ -97,4 +97,21 @@ public class GoodsController {
         return goodsService.search(page, rows, goods);
     }
 
+    /**
+     * 根据商品id集合更新对应的商品的状态
+     * @param ids 商品id集合
+     * @param status 商品的状态
+     * @return 操作结果
+     */
+    @GetMapping("/updateStatus")
+    public Result updateStatus(Long[] ids, String status){
+        try {
+            goodsService.updateStatus(ids, status);
+            return Result.ok("更新状态成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result.fail("更新状态失败");
+    }
+
 }

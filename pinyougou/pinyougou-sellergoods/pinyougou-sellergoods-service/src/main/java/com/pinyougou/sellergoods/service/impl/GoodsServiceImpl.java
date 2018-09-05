@@ -15,11 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 @Service(interfaceClass = GoodsService.class)
 public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsService {
@@ -120,6 +117,22 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
 
         //4、将最新的sku商品保存到数据库中
         saveItemList(goods);
+    }
+
+    @Override
+    public void updateStatus(Long[] ids, String status) {
+
+        TbGoods goods = new TbGoods();
+        goods.setAuditStatus(status);
+
+        Example example = new Example(TbGoods.class);
+        Example.Criteria criteria = example.createCriteria();
+
+        //设置查询条件； id in(1,3,34)
+        criteria.andIn("id", Arrays.asList(ids));
+
+        //goods表示要更新的数值; example更新的条件
+        goodsMapper.updateByExampleSelective(goods, example);
     }
 
     /**
