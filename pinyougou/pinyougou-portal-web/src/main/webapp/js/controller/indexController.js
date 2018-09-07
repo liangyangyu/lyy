@@ -5,6 +5,7 @@ app.controller("indexController", function ($scope, contentService) {
     //根据内容分类id查询内容列表
     $scope.findContentListByCategoryId = function (categoryId) {
         contentService.findContentListByCategoryId(categoryId).success(function (response) {
+            //将不同的分类对应的广告内容放置到不同的位置
             $scope.contentList[categoryId] = response;
         });
     };
