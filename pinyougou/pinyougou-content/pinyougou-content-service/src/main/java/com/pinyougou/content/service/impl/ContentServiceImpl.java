@@ -9,6 +9,7 @@ import com.pinyougou.content.service.ContentService;
 import com.pinyougou.service.impl.BaseServiceImpl;
 import com.pinyougou.vo.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
@@ -20,6 +21,9 @@ public class ContentServiceImpl extends BaseServiceImpl<TbContent> implements Co
 
     @Autowired
     private ContentMapper contentMapper;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     public PageResult search(Integer page, Integer rows, TbContent content) {
@@ -39,7 +43,16 @@ public class ContentServiceImpl extends BaseServiceImpl<TbContent> implements Co
 
     @Override
     public List<TbContent> findContentListByCategoryId(Long categoryId) {
-        List<TbContent> contentList = new ArrayList<>();
+        List<TbContent> contentList = null;
+
+        try {
+            contentList = (List<TbContent>) redisTemplate.boundHashOps("content").get(categoryId);
+            if (contentList != null) {
+                return contentList;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         //根据内容分类id查询该分类下的所有有效内容并且按照排序字段降序排序
         Example example = new Example(TbContent.class);
@@ -54,6 +67,13 @@ public class ContentServiceImpl extends BaseServiceImpl<TbContent> implements Co
         example.orderBy("sortOrder").desc();
 
         contentList = contentMapper.selectByExample(example);
+
+        try {
+            //设置缓存
+            redisTemplate.boundHashOps("content").put(categoryId, contentList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return contentList;
     }
