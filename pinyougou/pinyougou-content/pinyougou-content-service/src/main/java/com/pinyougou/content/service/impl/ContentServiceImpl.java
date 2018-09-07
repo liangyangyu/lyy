@@ -45,14 +45,14 @@ public class ContentServiceImpl extends BaseServiceImpl<TbContent> implements Co
 
     @Override
     public void update(TbContent tbContent) {
-        super.update(tbContent);
-
         //查询原来这个内容对应的分类id
         TbContent oldContent = findOne(tbContent.getId());
         if (!oldContent.getCategoryId().equals(tbContent.getCategoryId())) {
             //修改内容的时候已经修改过内容分类；所以要将原来分类的数据更新
             updateContentInRedisByCategoryId(oldContent.getCategoryId());
         }
+
+        super.update(tbContent);
 
         //更新当前对于的分类的redis数据
         updateContentInRedisByCategoryId(tbContent.getCategoryId());
