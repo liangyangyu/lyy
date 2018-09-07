@@ -13,7 +13,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service(interfaceClass = ContentService.class)
@@ -24,6 +26,54 @@ public class ContentServiceImpl extends BaseServiceImpl<TbContent> implements Co
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Override
+    public void add(TbContent tbContent) {
+        super.add(tbContent);
+
+        //同步缓存中数据
+        updateContentInRedisByCategoryId(tbContent.getCategoryId());
+    }
+
+    /**
+     * 将分类id对应的redis数据删除
+     * @param categoryId 分类id
+     */
+    private void updateContentInRedisByCategoryId(Long categoryId) {
+        redisTemplate.boundHashOps("content").delete(categoryId);
+    }
+
+    @Override
+    public void update(TbContent tbContent) {
+        super.update(tbContent);
+
+        //查询原来这个内容对应的分类id
+        TbContent oldContent = findOne(tbContent.getId());
+        if (!oldContent.getCategoryId().equals(tbContent.getCategoryId())) {
+            //修改内容的时候已经修改过内容分类；所以要将原来分类的数据更新
+            updateContentInRedisByCategoryId(oldContent.getCategoryId());
+        }
+
+        //更新当前对于的分类的redis数据
+        updateContentInRedisByCategoryId(tbContent.getCategoryId());
+    }
+
+    @Override
+    public void deleteByIds(Serializable[] ids) {
+
+        //查询所有的内容；并且要更新这些每一个内容对应的分类在redis中的缓存数据
+        Example example = new Example(TbContent.class);
+        Example.Criteria criteria = example.createCriteria();
+
+        criteria.andIn("id", Arrays.asList(ids));
+
+        List<TbContent> contentList = contentMapper.selectByExample(example);
+        for (TbContent tbContent : contentList) {
+            updateContentInRedisByCategoryId(tbContent.getCategoryId());
+        }
+
+        super.deleteByIds(ids);
+    }
 
     @Override
     public PageResult search(Integer page, Integer rows, TbContent content) {
