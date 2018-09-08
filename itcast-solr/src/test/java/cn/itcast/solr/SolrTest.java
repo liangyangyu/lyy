@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.solr.core.SolrTemplate;
+import org.springframework.data.solr.core.query.SimpleQuery;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -17,6 +18,21 @@ public class SolrTest {
 
     @Autowired
     private SolrTemplate solrTemplate;
+
+    @Test
+    public void testDeleteByQuery() {
+        //根据条件删除；参数：查询表达式
+        SimpleQuery query = new SimpleQuery("*:*");
+        solrTemplate.delete(query);
+
+        solrTemplate.commit();
+    }
+
+    @Test
+    public void testDeleteById() {
+        solrTemplate.deleteById("5424543");
+        solrTemplate.commit();
+    }
 
     @Test
     public void testAddOrUpdate(){
