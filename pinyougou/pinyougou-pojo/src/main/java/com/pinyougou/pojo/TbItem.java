@@ -17,7 +17,7 @@ import java.util.Map;
 public class TbItem implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Field
+    @Field //如果可以这样添加注释；则是因为在solr的schema.xml文件中配置了一致的域名
     private Long id;
 
     @Field("item_title")
@@ -72,7 +72,7 @@ public class TbItem implements Serializable {
     @Field("item_seller")
     private String seller;
 
-    @Dynamic
+    @Dynamic //表示动态域；如果有多个动态域的内容则这些内容在java中可以使用map；如：<item_spec_内存，16G>....<item_spec_网络, 移动>
     @Field("item_spec_*")
     private Map<String, String> specMap;
 
