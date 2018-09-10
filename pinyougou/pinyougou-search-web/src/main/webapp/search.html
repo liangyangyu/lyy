@@ -264,30 +264,7 @@
 					<div class="fl ext">
 					</div>
 				</div>
-				<div class="type-wrap">
-					<div class="fl key">更多筛选项</div>
-					<div class="fl value">
-						<ul class="type-list">
-							<li>
-								<a>特点</a>
-							</li>
-							<li>
-								<a>系统</a>
-							</li>
-							<li>
-								<a>手机内存 </a>
-							</li>
-							<li>
-								<a>单卡双卡</a>
-							</li>
-							<li>
-								<a>其他</a>
-							</li>
-						</ul>
-					</div>
-					<div class="fl ext">
-					</div>
-				</div>
+
 			</div>
 			<!--details-->
 			<div class="details">
@@ -295,22 +272,22 @@
 					<div class="navbar-inner filter">
 						<ul class="sui-nav">
 							<li class="active">
-								<a href="#">综合</a>
+								<a href="#" ng-click="addSortField('','')">综合</a>
 							</li>
 							<li>
 								<a href="#">销量</a>
 							</li>
 							<li>
-								<a href="#">新品</a>
+								<a href="#" ng-click="addSortField('updatetime','DESC')">新品</a>
 							</li>
 							<li>
 								<a href="#">评价</a>
 							</li>
 							<li>
-								<a href="#">价格↑</a>
+								<a href="#" ng-click="addSortField('price','ASC')">价格↑</a>
 							</li>
 							<li>
-								<a href="#">价格↓</a>
+								<a href="#" ng-click="addSortField('price','DESC')">价格↓</a>
 							</li>
 						</ul>
 					</div>
