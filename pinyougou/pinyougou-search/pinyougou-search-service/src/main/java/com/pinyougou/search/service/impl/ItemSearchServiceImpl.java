@@ -51,12 +51,10 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         List<HighlightEntry<TbItem>> highlighted = highlightPage.getHighlighted();
 
         //对每个商品的标题获取高亮标题并回填
-        for (TbItem item : highlightPage.getContent()) {
 
-            for (HighlightEntry<TbItem> entry : highlighted) {
-                if(entry.getHighlights() != null && entry.getHighlights().get(0).getSnipplets() != null) {
-                    item.setTitle(entry.getHighlights().get(0).getSnipplets().get(0));
-                }
+        for (HighlightEntry<TbItem> entry : highlighted) {
+            if (entry.getHighlights() != null && entry.getHighlights().get(0).getSnipplets() != null) {
+                entry.getEntity().setTitle(entry.getHighlights().get(0).getSnipplets().get(0));
             }
         }
 
