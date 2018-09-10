@@ -1,6 +1,7 @@
 package com.pinyougou.search.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSON;
 import com.pinyougou.pojo.TbItem;
 import com.pinyougou.search.service.ItemSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,5 +143,26 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         resultMap.put("total", highlightPage.getTotalElements());
 
         return resultMap;
+    }
+
+    @Override
+    public void importItemList(List<TbItem> itemList) {
+        for (TbItem item : itemList) {
+            Map map = JSON.parseObject(item.getSpec(), Map.class);
+            item.setSpecMap(map);
+        }
+
+        solrTemplate.saveBeans(itemList);
+        solrTemplate.commit();
+    }
+
+    @Override
+    public void deleteItemByGoodsIds(List<Long> goodsIds) {
+        Criteria criteria = new Criteria("item_goodsid").in(goodsIds);
+
+        SimpleQuery query = new SimpleQuery(criteria);
+
+        solrTemplate.delete(query);
+        solrTemplate.commit();
     }
 }
