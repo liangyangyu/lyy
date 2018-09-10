@@ -9,10 +9,12 @@ import org.springframework.data.solr.core.query.*;
 import org.springframework.data.solr.core.query.result.HighlightEntry;
 import org.springframework.data.solr.core.query.result.HighlightPage;
 import org.springframework.data.solr.core.query.result.ScoredPage;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class ItemSearchServiceImpl implements ItemSearchService {
@@ -43,6 +45,32 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 
         query.setHighlightOptions(highlightOptions);
 
+        //根据商品分类过滤查询：在查询条件的结果下应用过滤条件进行过滤
+        if(!StringUtils.isEmpty(searchMap.get("category"))){
+            Criteria categoryCriteria = new Criteria("item_category").is(searchMap.get("category"));
+            SimpleFilterQuery categoryFilterQuery = new SimpleFilterQuery(categoryCriteria);
+            query.addFilterQuery(categoryFilterQuery);
+        }
+
+        //根据品牌过滤查询：
+        if(!StringUtils.isEmpty(searchMap.get("brand"))){
+            Criteria brandCriteria = new Criteria("item_brand").is(searchMap.get("brand"));
+            SimpleFilterQuery brandFilterQuery = new SimpleFilterQuery(brandCriteria);
+            query.addFilterQuery(brandFilterQuery);
+        }
+
+        //根据规格过滤查询
+        if (searchMap.get("spec") != null) {
+            Map<String, String> specMap = (Map<String, String>)searchMap.get("spec");
+
+            Set<Map.Entry<String, String>> entries = specMap.entrySet();
+            for (Map.Entry<String, String> entry : entries) {
+                //在schema.xml文件中定义的域名称为：item_spec_* --》 item_spec_网络
+                Criteria specCriteria = new Criteria("item_spec_" + entry.getKey()).is(entry.getValue());
+                SimpleFilterQuery specFilterQuery = new SimpleFilterQuery(specCriteria);
+                query.addFilterQuery(specFilterQuery);
+            }
+        }
 
         //查询
         HighlightPage<TbItem> highlightPage = solrTemplate.queryForHighlightPage(query, TbItem.class);
@@ -52,9 +80,11 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 
         //对每个商品的标题获取高亮标题并回填
 
-        for (HighlightEntry<TbItem> entry : highlighted) {
-            if (entry.getHighlights() != null && entry.getHighlights().get(0).getSnipplets() != null) {
-                entry.getEntity().setTitle(entry.getHighlights().get(0).getSnipplets().get(0));
+        if(highlighted != null && highlighted.size() > 0) {
+            for (HighlightEntry<TbItem> entry : highlighted) {
+                if (entry.getHighlights() != null && entry.getHighlights().size() > 0) {
+                    entry.getEntity().setTitle(entry.getHighlights().get(0).getSnipplets().get(0));
+                }
             }
         }
 
