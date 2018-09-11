@@ -21,7 +21,7 @@
                     "id":"${item.id?c}",
                     "title":"${item.title}",
                     "price":"${item.price?c}",
-                    "spec":${item.spec}
+                    "spec":${item.spec!}
                 },
             </#list>
         ];
