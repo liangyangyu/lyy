@@ -199,6 +199,7 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         Example.Criteria criteria = example.createCriteria();
 
         criteria.andEqualTo("status", status);
+        criteria.andEqualTo("goodsId", goodsId);
 
         example.orderBy("isDefault").desc();
 
@@ -246,6 +247,7 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
             item.setNum(9999);
             item.setIsDefault("1");//表示默认
             item.setStatus("0");//未审核
+            item.setSpec("{}");
 
             item.setTitle(goods.getGoods().getGoodsName());
 

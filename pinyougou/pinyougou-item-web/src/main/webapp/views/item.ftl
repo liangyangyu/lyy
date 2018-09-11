@@ -12,7 +12,7 @@
     <link rel="stylesheet" type="text/css" href="../css/widget-cartPanelView.css" />
     <script type="text/javascript" src="../plugins/angularjs/angular.min.js"> </script>
     <script type="text/javascript" src="../js/base.js"> </script>
-    <script type="text/javascript" src="../js/controller/itemController.js"> </script>
+
     <script type="text/javascript">
         //组装SKU列表
         var skuList = [
@@ -25,8 +25,8 @@
                 },
             </#list>
         ];
-
     </script>
+    <script type="text/javascript" src="../js/controller/itemController.js"> </script>
 </head>
 
 <body ng-app="pinyougou" ng-controller="itemController" ng-init="loadSku()">
