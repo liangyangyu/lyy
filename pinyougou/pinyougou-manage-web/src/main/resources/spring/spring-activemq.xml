@@ -27,4 +27,9 @@
         <constructor-arg value="pinyougou_solr_item_queue"/>
     </bean>
 
+    <!--商品删除之后的搜索系统的消息队列 -->
+    <bean id="solrItemDeleteQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="pinyougou_solr_item_delete_queue"/>
+    </bean>
+
 </beans>

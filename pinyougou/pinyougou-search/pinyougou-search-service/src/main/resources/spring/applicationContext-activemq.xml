@@ -27,6 +27,11 @@
         <constructor-arg value="pinyougou_solr_item_queue"/>
     </bean>
 
+    <!--商品删除之后的搜索系统的消息队列 -->
+    <bean id="solrItemDeleteQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="pinyougou_solr_item_delete_queue"/>
+    </bean>
+
     <!-- messageListener实现类 -->
     <bean id="solrItemMessageListener" class="com.pinyougou.search.activemq.listener.SolrItemQueueMessageListener"/>
 
@@ -35,6 +40,16 @@
         <property name="connectionFactory" ref="connectionFactory"/>
         <property name="destination" ref="solrItemQueue"/>
         <property name="messageListener" ref="solrItemMessageListener"/>
+    </bean>
+
+    <!-- messageListener实现类 -->
+    <bean id="solrItemDeleteMessageListener" class="com.pinyougou.search.activemq.listener.SolrItemDeleteMessageListener"/>
+
+    <!-- 配置一个jms监听容器 -->
+    <bean id="jmsContainer2" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="destination" ref="solrItemDeleteQueue"/>
+        <property name="messageListener" ref="solrItemDeleteMessageListener"/>
     </bean>
 
 </beans>
