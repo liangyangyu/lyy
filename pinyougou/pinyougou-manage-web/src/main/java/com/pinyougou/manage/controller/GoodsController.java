@@ -9,7 +9,9 @@ import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.PageResult;
 import com.pinyougou.vo.Result;
 import org.apache.activemq.command.ActiveMQQueue;
+import org.apache.activemq.command.ActiveMQTopic;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,6 +35,12 @@ public class GoodsController {
 
     @Autowired
     private ActiveMQQueue solrItemDeleteQueue;
+
+    @Autowired
+    private ActiveMQTopic itemTopic;
+
+    @Autowired
+    private ActiveMQTopic itemDeleteTopic;
 
     @RequestMapping("/findAll")
     public List<TbGoods> findAll() {
@@ -94,7 +102,26 @@ public class GoodsController {
             goodsService.deleteGoodsByIds(ids);
 
             //同步删除搜索系统中的商品数据
-            jmsTemplate.send(solrItemDeleteQueue, new MessageCreator() {
+            sendMQMsg(solrItemDeleteQueue, ids);
+
+            sendMQMsg(itemDeleteTopic, ids);
+
+            return Result.ok("删除成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result.fail("删除失败");
+    }
+
+    /**
+     * 发送MQ消息
+     * @param destination 模式（队列、主题）
+     * @param ids 商品spu id集合
+     */
+    private void sendMQMsg(Destination destination, Long[] ids) {
+
+        try {
+            jmsTemplate.send(destination, new MessageCreator() {
                 @Override
                 public Message createMessage(Session session) throws JMSException {
                     ObjectMessage objectMessage = session.createObjectMessage();
@@ -102,12 +129,9 @@ public class GoodsController {
                     return objectMessage;
                 }
             });
-
-            return Result.ok("删除成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail("删除失败");
     }
 
     /**
@@ -152,6 +176,8 @@ public class GoodsController {
                         return textMessage;
                     }
                 });
+
+                sendMQMsg(itemTopic, ids);
             }
 
             return Result.ok("更新状态成功");
