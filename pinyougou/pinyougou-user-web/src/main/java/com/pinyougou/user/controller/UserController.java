@@ -31,16 +31,30 @@ public class UserController {
         return userService.findPage(page, rows);
     }
 
+    /**
+     * 保存用户信息
+     * @param user 用户信息
+     * @param smsCode 验证码
+     * @return
+     */
     @PostMapping("/add")
-    public Result add(@RequestBody TbUser user) {
+    public Result add(@RequestBody TbUser user, String smsCode) {
         try {
-            user.setCreated(new Date());
-            user.setUpdated(user.getCreated());
-            user.setPassword(DigestUtils.md5Hex(user.getPassword()));
-            //来源设置为PC端注册
-            user.setSourceType("1");
-            userService.add(user);
-            return Result.ok("增加成功");
+            if(PhoneFormatCheckUtils.isPhoneLegal(user.getPhone())) {
+                if (userService.checkCode(user.getPhone(), smsCode)) {
+                    user.setCreated(new Date());
+                    user.setUpdated(user.getCreated());
+                    user.setPassword(DigestUtils.md5Hex(user.getPassword()));
+                    //来源设置为PC端注册
+                    user.setSourceType("1");
+                    userService.add(user);
+                    return Result.ok("增加成功");
+                } else {
+                    return Result.fail("验证码输入错误");
+                }
+            } else {
+                return Result.fail("手机号非法");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
