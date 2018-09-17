@@ -86,7 +86,7 @@ http://www.springframework.org/schema/security/spring-security.xsd">
     <beans:bean id="requestSingleLogoutFilter"
                 class="org.springframework.security.web.authentication.logout.LogoutFilter">
         <beans:constructor-arg
-                value="http://cas.pinyougou.com/logout?service=http://cart.pinyougou.com"/>
+                value="http://cas.pinyougou.com/logout?service=http://cart.pinyougou.com/redirect.html"/>
         <beans:constructor-arg>
             <beans:bean
                     class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
