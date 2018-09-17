@@ -27,4 +27,12 @@ public interface CartService {
      * @param username 用户名
      */
     void saveCartListToRedis(List<Cart> cartList, String username);
+
+    /**
+     * 合并两个列表数据
+     * @param cartList1 购物车集合
+     * @param cartList2 购物车集合
+     * @return 购物车集合
+     */
+    List<Cart> mergeCartList(List<Cart> cartList1, List<Cart> cartList2);
 }

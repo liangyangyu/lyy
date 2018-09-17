@@ -79,21 +79,32 @@ public class CartController {
     public List<Cart> findCartList() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
+        //未登录；从cookie中查询购物车数据
+        List<Cart> cookie_cartList = new ArrayList<>();
+        //1、获取cookie中购物车数据
+        String cartListJsonStr = CookieUtils.getCookieValue(request, COOKIE_CART_LIST, true);
+
+        //2、将cookie的购物车json格式字符串转换为集合
+        if(!StringUtils.isEmpty(cartListJsonStr)){
+            cookie_cartList = JSONArray.parseArray(cartListJsonStr, Cart.class);
+        }
+
         if ("anonymousUser".equals(username)) {
-            //未登录；从cookie中查询购物车数据
-            List<Cart> cookie_cartList = new ArrayList<>();
-            //1、获取cookie中购物车数据
-            String cartListJsonStr = CookieUtils.getCookieValue(request, COOKIE_CART_LIST, true);
-
-            //2、将cookie的购物车json格式字符串转换为集合
-            if(!StringUtils.isEmpty(cartListJsonStr)){
-                cookie_cartList = JSONArray.parseArray(cartListJsonStr, Cart.class);
-            }
-
             return cookie_cartList;
         } else {
             //已经登录；从redis中查询购物车数据
             List<Cart> redis_cartList = cartService.findCartListInRedisByUsername(username);
+
+            //合并购物车数据
+            if (cookie_cartList != null && cookie_cartList.size() > 0) {
+                redis_cartList = cartService.mergeCartList(cookie_cartList, redis_cartList);
+
+                //将最新的购物车数据写回redis
+                cartService.saveCartListToRedis(redis_cartList, username);
+
+                //删除cookie中的购物车数据
+                CookieUtils.deleteCookie(request, response, COOKIE_CART_LIST);
+            }
 
             return redis_cartList;
         }
