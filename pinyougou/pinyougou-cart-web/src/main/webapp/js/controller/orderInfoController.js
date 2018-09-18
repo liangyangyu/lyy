@@ -12,7 +12,29 @@ app.controller("orderInfoController", function ($scope, cartService, addressServ
 
             $scope.addressList = response;
 
+            for (var i = 0; i < response.length; i++) {
+                var address = response[i];
+                if(address.isDefault=="1"){
+                    $scope.address = address;
+                    break;
+                }
+            }
+
         });
 
+    };
+
+    //选择地址
+    $scope.selectAddress = function (address) {
+        $scope.address = address;
+    };
+
+    //判断当前地址是否是选择了的那个地址
+    $scope.isSelectedAddress = function (address) {
+        if($scope.address == address){
+            return true;
+        }
+
+        return false;
     };
 });
