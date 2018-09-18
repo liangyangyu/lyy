@@ -37,4 +37,13 @@ app.controller("orderInfoController", function ($scope, cartService, addressServ
 
         return false;
     };
+
+    //默认支付方式；微信支付
+    $scope.order = {"paymentType":"1"};
+
+    //选择支付方式
+    $scope.selectPaymentType = function (type) {
+        $scope.order.paymentType = type;
+    };
+
 });
