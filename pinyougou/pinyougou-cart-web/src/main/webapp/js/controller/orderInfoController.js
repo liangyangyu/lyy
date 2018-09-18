@@ -46,4 +46,14 @@ app.controller("orderInfoController", function ($scope, cartService, addressServ
         $scope.order.paymentType = type;
     };
 
+    //查询购物车列表
+    $scope.findCartList = function () {
+        cartService.findCartList().success(function (response) {
+            $scope.cartList = response;
+            //计算总数量和价格
+            $scope.totalValue = cartService.sumTotalValue(response);
+        });
+
+    };
+
 });
