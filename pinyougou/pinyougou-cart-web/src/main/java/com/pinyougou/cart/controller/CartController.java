@@ -10,6 +10,7 @@ import com.pinyougou.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,15 +46,16 @@ public class CartController {
      * @param num 购买数量
      * @return 操作结果
      */
+    @CrossOrigin(origins = "http://item.pinyougou.com", allowCredentials = "true")
     @GetMapping("/addItemToCartList")
     public Result addItemToCartList(Long itemId, Integer num) {
         try {
 
             //允许详情系统的资源请求
-            response.setHeader("Access-Control-Allow-Origin ", "http://item.pinyougou.com");
+            //response.setHeader("Access-Control-Allow-Origin ", "http://item.pinyougou.com");
 
             //允许接收详情系统前端携带的cookie
-            response.setHeader("Access-Control-Allow-Credentials", "true");
+            //response.setHeader("Access-Control-Allow-Credentials", "true");
 
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
