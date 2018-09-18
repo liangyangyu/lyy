@@ -7,9 +7,9 @@ app.service("cartService", function ($http) {
         return $http.get("cart/findCartList.do?t=" + Math.random());
     };
 
-    this.addCartToCartList = function (itemId, num) {
+    this.addItemToCartList = function (itemId, num) {
 
-        return $http.get("cart/addCartToCartList.do?itemId=" + itemId + "&num=" + num);
+        return $http.get("cart/addItemToCartList.do?itemId=" + itemId + "&num=" + num);
     };
 
     this.sumTotalValue = function (cartList) {

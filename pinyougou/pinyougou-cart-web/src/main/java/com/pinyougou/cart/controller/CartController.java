@@ -45,9 +45,16 @@ public class CartController {
      * @param num 购买数量
      * @return 操作结果
      */
-    @GetMapping("/addCartToCartList")
-    public Result addCartToCartList(Long itemId, Integer num) {
+    @GetMapping("/addItemToCartList")
+    public Result addItemToCartList(Long itemId, Integer num) {
         try {
+
+            //允许详情系统的资源请求
+            response.setHeader("Access-Control-Allow-Origin ", "http://item.pinyougou.com");
+
+            //允许接收详情系统前端携带的cookie
+            response.setHeader("Access-Control-Allow-Credentials", "true");
+
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
             //查询购物车列表
