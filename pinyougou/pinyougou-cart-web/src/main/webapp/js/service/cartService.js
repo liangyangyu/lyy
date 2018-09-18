@@ -27,4 +27,9 @@ app.service("cartService", function ($http) {
         return totalValue;
     };
 
+    this.submitOrder = function (order) {
+        return $http.post("order/add.do", order);
+
+    };
+
 });
