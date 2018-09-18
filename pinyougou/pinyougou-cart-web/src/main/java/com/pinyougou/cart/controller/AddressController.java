@@ -5,6 +5,7 @@ import com.pinyougou.pojo.TbAddress;
 import com.pinyougou.user.service.AddressService;
 import com.pinyougou.vo.PageResult;
 import com.pinyougou.vo.Result;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -76,6 +77,18 @@ public class AddressController {
     public PageResult search(@RequestBody  TbAddress address, @RequestParam(value = "page", defaultValue = "1")Integer page,
                                @RequestParam(value = "rows", defaultValue = "10")Integer rows) {
         return addressService.search(page, rows, address);
+    }
+
+    /**
+     * 查询当前登录用户的收件人地址列表
+     * @return 收件人地址列表
+     */
+    @GetMapping("/findAddressList")
+    public List<TbAddress> findAddressList(){
+        TbAddress param = new TbAddress();
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        param.setUserId(userId);
+        return addressService.findByWhere(param);
     }
 
 }
