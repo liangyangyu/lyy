@@ -156,4 +156,9 @@ public class OrderServiceImpl extends BaseServiceImpl<TbOrder> implements OrderS
         //5、返回支付日志id；如果是货到付款返回空字符串
         return outTradeNo;
     }
+
+    @Override
+    public TbPayLog findPayLogById(String outTradeNo) {
+        return payLogMapper.selectByPrimaryKey(outTradeNo);
+    }
 }
