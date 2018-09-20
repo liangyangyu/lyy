@@ -1,6 +1,7 @@
 package com.pinyougou.cart.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.pinyougou.common.util.CookieUtils;
 import com.pinyougou.order.service.OrderService;
 import com.pinyougou.pay.service.WeixinPayService;
 import com.pinyougou.pojo.TbPayLog;
@@ -56,6 +57,8 @@ public class PayController {
     @GetMapping("/queryPayStatus")
     public Result queryPayStatus(String outTradeNo){
         Result result = Result.fail("查询支付状态失败");
+        //如果3分钟未支付则提示支付超时并重新自动生成新的支付二维码
+        int count = 0;
         try {
             while(true){
                 //1、到支付系统查询订单的 支付状态
@@ -76,6 +79,12 @@ public class PayController {
 
                 //每隔3秒执行一次
                 Thread.sleep(3000);
+
+                count++;
+                if(count > 60){
+                    result = Result.fail("支付超时");
+                    break;
+                }
             }
 
 

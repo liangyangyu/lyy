@@ -41,10 +41,17 @@ app.controller("payController", function ($scope, $location, cartService, paySer
         payService.queryPayStatus(outTradeNo).success(function (response) {
             if(response.success){
                 //跳转到支付成功提示页面
-                location.href = "paysuccess.html";
+                location.href = "paysuccess.html?money=" + $scope.money;
             } else {
-                //支付失败则跳转到支付失败提示页面
-                location.href = "payfail.html";
+                //如果3分钟未支付则提示支付超时并重新自动生成新的支付二维码
+                if ("支付超时" == response.message) {
+                    //alert(response.message);
+                    $scope.createNative();
+                } else {
+                    //支付失败则跳转到支付失败提示页面
+                    location.href = "payfail.html";
+                }
+
             }
 
         });
