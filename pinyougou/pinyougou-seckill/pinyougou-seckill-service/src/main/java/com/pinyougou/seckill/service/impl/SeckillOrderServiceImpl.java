@@ -76,15 +76,15 @@ public class SeckillOrderServiceImpl extends BaseServiceImpl<TbSeckillOrder> imp
             //2、递减库存
             seckillGoods.setStockCount(seckillGoods.getStockCount()-1);
 
-            //2.0、将最新的秒杀商品更新回redis
-            redisTemplate.boundHashOps(SeckillGoodsServiceImpl.SECKILL_GOODS).put(seckillId, seckillGoods);
-
             //2.1、如果库存为0则写回mysql并删除redis中的秒杀商品
             if(seckillGoods.getStockCount() < 1){
                 //保存秒杀商品到mysql
                 seckillGoodsMapper.updateByPrimaryKeySelective(seckillGoods);
                 //删除redis中的数据
                 redisTemplate.boundHashOps(SeckillGoodsServiceImpl.SECKILL_GOODS).delete(seckillId);
+            } else {
+                //2.0、将最新的秒杀商品更新回redis
+                redisTemplate.boundHashOps(SeckillGoodsServiceImpl.SECKILL_GOODS).put(seckillId, seckillGoods);
             }
 
             //2.2、释放分布式锁
@@ -110,5 +110,28 @@ public class SeckillOrderServiceImpl extends BaseServiceImpl<TbSeckillOrder> imp
 
         //4、返回秒杀订单的id
         return seckillOrderId;
+    }
+
+    @Override
+    public TbSeckillOrder findSeckillOrderInRedisByOrderId(String outTradeNo) {
+        return (TbSeckillOrder) redisTemplate.boundHashOps(SECKILL_ORDER).get(outTradeNo);
+    }
+
+    @Override
+    public void updateSeckillOrderInRedisToDb(String outTradeNo, String transaction_id) {
+        TbSeckillOrder seckillOrder = findSeckillOrderInRedisByOrderId(outTradeNo);
+
+        if (seckillOrder != null) {
+            //已支付
+            seckillOrder.setStatus("1");
+            seckillOrder.setPayTime(new Date());
+            seckillOrder.setTransactionId(transaction_id);
+
+            //保存redis中的订单到mysql中
+            seckillOrderMapper.insertSelective(seckillOrder);
+
+            //删除redis中的订单
+            redisTemplate.boundHashOps(SECKILL_ORDER).delete(outTradeNo);
+        }
     }
 }
