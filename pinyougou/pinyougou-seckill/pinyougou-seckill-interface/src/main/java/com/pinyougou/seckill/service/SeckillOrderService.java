@@ -30,4 +30,11 @@ public interface SeckillOrderService extends BaseService<TbSeckillOrder> {
      * @param transaction_id 微信交易号
      */
     void updateSeckillOrderInRedisToDb(String outTradeNo, String transaction_id);
+
+    /**
+     * 在秒杀系统中删除存储在redis中的秒杀订单，将该秒杀商品的库存加1（如果能在redis中找到商品则库存加1，
+     * 如果找不到则到mysql中查询该商品并库存加1再存入redis）
+     * @param outTradeNo 秒杀订单id
+     */
+    void deleteSeckillOrderInRedis(String outTradeNo) throws InterruptedException;
 }
