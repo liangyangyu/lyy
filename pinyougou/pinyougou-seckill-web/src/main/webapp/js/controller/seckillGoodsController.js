@@ -13,12 +13,15 @@ app.controller("seckillGoodsController", function ($scope, $location, $interval,
 
             //倒计时总秒数
             var allSeconds = Math.floor((new Date(response.endTime).getTime() - new Date().getTime()) / 1000);
+
+            //每隔1秒执行总秒数递减
             var task = $interval(function () {
                 if (allSeconds > 0) {
                     allSeconds = allSeconds - 1;
                     //转换倒计时总秒数为 **天**:**:** 的格式并在页面展示
                     $scope.timestring = convertTimeString(allSeconds);
                 } else {
+                    //取消定时执行的函数
                     $interval.cancel(task);
                     alert("秒杀活动已结束。");
                 }
