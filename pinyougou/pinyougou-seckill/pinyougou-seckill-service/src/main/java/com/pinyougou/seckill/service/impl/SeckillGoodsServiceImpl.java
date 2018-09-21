@@ -20,7 +20,7 @@ import java.util.List;
 public class SeckillGoodsServiceImpl extends BaseServiceImpl<TbSeckillGoods> implements SeckillGoodsService {
 
     //秒杀商品在redis中的key的名称
-    private static final String SECKILL_GOODS = "SECKILL_GOODS";
+    public static final String SECKILL_GOODS = "SECKILL_GOODS";
     @Autowired
     private SeckillGoodsMapper seckillGoodsMapper;
 
@@ -83,7 +83,7 @@ public class SeckillGoodsServiceImpl extends BaseServiceImpl<TbSeckillGoods> imp
             try {
                 //存入redis
                 for (TbSeckillGoods seckillGoods : seckillGoodsList) {
-                    redisTemplate.boundHashOps(SECKILL_GOODS).put(seckillGoods.getId().toString(), seckillGoods);
+                    redisTemplate.boundHashOps(SECKILL_GOODS).put(seckillGoods.getId(), seckillGoods);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -97,6 +97,6 @@ public class SeckillGoodsServiceImpl extends BaseServiceImpl<TbSeckillGoods> imp
 
     @Override
     public TbSeckillGoods findSeckillGoodsInRedisById(Long id) {
-        return (TbSeckillGoods) redisTemplate.boundHashOps(SECKILL_GOODS).get(id.toString());
+        return (TbSeckillGoods) redisTemplate.boundHashOps(SECKILL_GOODS).get(id);
     }
 }
