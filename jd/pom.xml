@@ -8,7 +8,7 @@
   <packaging>war</packaging>
     <properties>
         <!-- spring版本号 -->
-        <spring.version>4.3.8.RELEASE</spring.version>
+        <spring.version>5.2.20.RELEASE</spring.version>
         <!-- jstl标签版本 -->
         <jstl.version>1.2</jstl.version>
         <!-- commons-lang版本 -->
